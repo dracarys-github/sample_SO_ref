@@ -7,27 +7,18 @@ from items.models import Item_Mast
 
 from items.serializer import Item_Mast_Serializer
 
-class ConvertListMixin:
-    '''
-    Dynamically detects if the data is a list of rows or a single row
-    and appropriately assigns many=True for serializer
-    '''
-    def get_serializer(self, *args, **kwargs):
-        """ if an array is passed, set serializer to many """
-        if isinstance(kwargs.get('data', {}), list):
-            kwargs['many'] = True
-        return super(ConvertListMixin, self).get_serializer(*args, **kwargs)
 
 class ListData:
     '''
     Class used to generalize GET request
     '''
     def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset,many=True)
         return Response(serializer.data)
 
-class CreateData(ConvertListMixin):
+
+class CreateData:
     '''
     Class used to generalize POST request
     Inherits ConvertListMixin because dynamically detects if data is list of rows or single row
