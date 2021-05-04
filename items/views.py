@@ -12,7 +12,7 @@ class Item_Mast_ListView(GenericAPIView):
     serializer_class = Item_Mast_Serializer
 
     def get(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = self.get_queryset()
         serializer = self.get_serializer(queryset,many=True)
         return Response(serializer.data)
 
